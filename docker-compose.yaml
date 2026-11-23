@@ -1,0 +1,41 @@
+x-anchors:
+  HOST_IP: &hostip ${HOST_IP:-127.0.0.1}
+
+
+services:
+  mercury:
+    container_name: mercury
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kd2qar/mercury
+    devices:
+      - source: /dev/snd
+        target: /dev/snd
+        permissions: rwm
+      - source: /dev/ttyUSB0
+        target: /dev/ttyUSB0
+        permissions: rwm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - type: bind
+        source: ./mercury.ini
+        target: /mercury/mercury.ini
+        read_only: true
+    ports:
+      - host_ip: *hostip
+        protocol: tcp
+        target: 8100
+        published: 8100
+      - host_ip: *hostip
+        protocol: tcp
+        target: 8301
+        published: 8301
+      - host_ip: *hostip
+        protocol: tcp
+        target: 8300
+        published: 8300
+
+    group_add:
+      - audio
+
