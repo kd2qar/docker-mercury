@@ -8,8 +8,9 @@ RUN apt-get update && \
 	DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 	build-essential libasound2-dev libpulse-dev libhamlib-dev make git
 
-ADD https://github.com/Rhizomatica/mercury.git /mercury
+ADD https://github.com/Rhizomatica/mercury.git#v1.9.24 /mercury
 #RUN git clone  https://github.com/Rhizomatica/mercury.git /mercury
+#ADD mercury-v1.9.24 /mercury
 
 WORKDIR /mercury
 RUN make -j$(nproc)
