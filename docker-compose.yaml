@@ -8,7 +8,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    hostname: mercury
     image: kd2qar/mercury
+    entrypoint:
+      - "/usr/bin/mercury"
+      - "-H"
+      - "1"
     devices:
       - source: /dev/snd
         target: /dev/snd

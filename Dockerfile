@@ -6,15 +6,18 @@ FROM ruut AS builder
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND="noninteractive" apt-get -y install \
-	build-essential libasound2-dev libpulse-dev libhamlib-dev make git
+	build-essential libasound2-dev libpulse-dev libhamlib-dev make && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /var/cache/apt/archives/*
 
 ADD https://github.com/Rhizomatica/mercury.git#v1.9.24 /mercury
 #RUN git clone  https://github.com/Rhizomatica/mercury.git /mercury
 #ADD mercury-v1.9.24 /mercury
 
 WORKDIR /mercury
-RUN make -j$(nproc)
-RUN make install
+RUN make -j$(nproc) && \
+	make install && \
+	make clean
 
 RUN cp mercury.ini.example mercury.ini
 
@@ -27,8 +30,9 @@ RUN <<-MERC
 COPY dot.bashrc /root/.bashrc
 COPY  --chmod=0755 alsa_setup /root/bin/alsa_setup
 RUN /root/bin/alsa_setup
+WORKDIR /mercury
 
 #ENTRYPOINT  [ "/bin/bash" ]
-ENTRYPOINT ["/mercury/mercury","-H","1"]
+ENTRYPOINT ["/usr/bin/mercury","-H","1"]
 
 

@@ -2,3 +2,5 @@
 
 apt-get update && apt-get install -y alsa-utils
 
+rm -rf /var/lib/apt/lists/*
+rm -rf /var/cache/apt/archives/*
