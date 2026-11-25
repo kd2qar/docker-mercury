@@ -2,6 +2,15 @@ FROM debian:trixie-slim AS ruut
 
 #ENV=DEBIAN_FRONTEND=noninteractive
 
+COPY  --chmod=0755 alsa_setup /root/bin/alsa_setup
+RUN /root/bin/alsa_setup
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get -y install \
+    libasound2 libpulse0 libhamlib4 && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apt/archives/*
+
 FROM ruut AS builder
 
 RUN apt-get update && \
@@ -30,6 +39,9 @@ RUN <<-MERC
 COPY dot.bashrc /root/.bashrc
 COPY  --chmod=0755 alsa_setup /root/bin/alsa_setup
 RUN /root/bin/alsa_setup
+
+FROM ruut
+COPY --from=builder /usr/bin/mercury /usr/bin/mercury
 WORKDIR /mercury
 
 #ENTRYPOINT  [ "/bin/bash" ]
