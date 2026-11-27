@@ -43,4 +43,9 @@ services:
 
     group_add:
       - audio
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
